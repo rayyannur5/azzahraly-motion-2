@@ -15,14 +15,14 @@ export default function Sidebar({
 
   return (
     <>
-      <section className="w-[20vw] h-screen bg-sky-900 py-10 px-7">
-        <div className="mb-10 flex justify-center item-center ">
-          <img src={appLogo} alt="Azzahraly" className="h-11" />
+      <section className="w-[18vw] h-screen bg-sky-900 px-7">
+        <div className="h-[10vh] flex justify-center items-center mb-4">
+          <img src={appLogo} alt="Azzahraly" className="flex h-8 w-fit" />
         </div>
         <div className="flex flex-col gap-5">
           {/* active Button */}
           <button
-            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 0 ? " text-white justify-start bg-amber-500 border-none hover:bg-amber-600" : " text-neutral-300 justify-start  bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
+            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 0 ? " text-white justify-start bg-amber-600 border-none rounded-xl hover:bg-amber-700" : " text-neutral-300 justify-start hover:rounded-xl bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
             onClick={() => {
               setAktif(0);
               handlerDashboard();
@@ -33,7 +33,7 @@ export default function Sidebar({
           </button>
           {/* Disable */}
           <button
-            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 1 ? " text-white justify-start bg-amber-500 border-none hover:bg-amber-600" : " text-neutral-300 justify-start  bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
+            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 1 ? " text-white justify-start bg-amber-600 border-none rounded-xl hover:bg-amber-700" : " text-neutral-300 justify-start hover:rounded-xl bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
             onClick={() => {
               setAktif(1);
               handlerNewProject();
@@ -43,14 +43,14 @@ export default function Sidebar({
             New Project
           </button>
           <button
-            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 2 ? " text-white justify-start bg-amber-500 border-none hover:bg-amber-600" : " text-neutral-300 justify-start  bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
+            className={`btn px-6 gap-3 text-base font-semibold tracking-wide ${aktif == 2 ? " text-white justify-start bg-amber-600 border-none rounded-xl hover:bg-amber-700" : " text-neutral-300 justify-start hover:rounded-xl bg-sky-900 border-none hover:bg-sky-950 hover:text-white"}`}
             onClick={() => {
               setAktif(2);
               handlerOpenProject();
             }}
           >
             <IoFolderOpen />
-            Open Project
+            Import Project
           </button>
           <button className="btn px-6 gap-3 text-base font-semibold tracking-wide text-neutral-300 justify-start  bg-sky-900 border-none hover:bg-sky-950 hover:text-white">
             <IoSettings />
