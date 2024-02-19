@@ -25,6 +25,7 @@ import Serial from "../Serial";
 
 export default class Edit extends Component {
   serial = new Serial();
+  stopMotion = false;
 
   constructor(props) {
     super(props);
@@ -40,6 +41,7 @@ export default class Edit extends Component {
     this.saveNewMotion = this.saveNewMotion.bind(this);
     this.saveEditMotion = this.saveEditMotion.bind(this);
     this.handlerDeleteMotion = this.handlerDeleteMotion.bind(this);
+    this.handlerChangeNextMotion = this.handlerChangeNextMotion.bind(this);
     this.saveIdGroup = this.saveIdGroup.bind(this);
     this.deleteIdGroup = this.deleteIdGroup.bind(this);
     this.save = this.save.bind(this);
@@ -180,6 +182,13 @@ export default class Edit extends Component {
     });
   }
 
+  handlerChangeNextMotion(val, index) {
+    this.state.data.motions[index].next = val;
+    this.setState({
+      data: this.state.data,
+    });
+  }
+
   handlerNewStep() {
     if (this.state.activeMotion == null) {
       toast("Select motion first");
@@ -286,6 +295,7 @@ export default class Edit extends Component {
       if (value.endsWith("#")) {
         start = false;
         message = message.substring(1, message.length - 1);
+<<<<<<< HEAD
         const received_data = JSON.parse(message);
         if (received_data.type == "c") {
           this.state.connected = true;
@@ -306,14 +316,49 @@ export default class Edit extends Component {
               );
               servo.state = foundarray[0].state;
               servo.value = foundarray[0].value;
+=======
+        console.log(message);
+        if (message == "OK") {
+          if (this.state.data.motions[this.state.activeMotion].next != 0) {
+            const next = this.state.data.motions[this.state.activeMotion].next;
+            this.setState({
+              activeMotion: next,
+            });
+            if (this.stopMotion) {
+              this.play();
+>>>>>>> 1208216707c6ef8c595476121f6fc3f5f7caf910
             }
-          });
+          }
+        } else {
+          const received_data = JSON.parse(message);
+          if (received_data.type == "c") {
+            this.state.connected = true;
 
-          this.setState({
-            poseRobot: this.state.poseRobot,
-          });
+            received_data.servos.forEach((servo) => {
+              servo.selected = false;
+            });
+
+            this.setState({
+              connected: true,
+              poseRobot: received_data.servos,
+            });
+          } else if (received_data.type == "r") {
+            this.state.poseRobot.forEach((servo) => {
+              if (servo.selected) {
+                var foundarray = received_data.servos.filter(
+                  (e) => e.id == servo.id,
+                );
+                servo.state = foundarray[0].state;
+                servo.value = foundarray[0].value;
+              }
+            });
+
+            this.setState({
+              poseRobot: this.state.poseRobot,
+            });
+          }
+          console.log(received_data);
         }
-        console.log(received_data);
         message = "";
       }
     };
@@ -397,6 +442,8 @@ export default class Edit extends Component {
       return;
     }
 
+    this.stopMotion = true;
+
     let send = "Y";
     this.state.data.motions[this.state.activeMotion].steps.forEach((step) => {
       step.value.forEach((val) => {
@@ -465,7 +512,10 @@ export default class Edit extends Component {
               >
                 <FaCirclePlay />
               </button>
-              <button className="btn btn-sm h-10 w-10 rounded-xl border-none bg-yellow-500 text-lg text-white hover:bg-yellow-600">
+              <button
+                className="btn btn-sm h-10 w-10 rounded-xl border-none bg-yellow-500 text-lg text-white hover:bg-yellow-600"
+                onClick={() => (this.stopMotion = false)}
+              >
                 <FaCircleStop />
               </button>
               <button
