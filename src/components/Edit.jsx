@@ -216,7 +216,7 @@ export default class Edit extends Component {
 
     this.state.data.motions[this.state.activeMotion].steps.splice(
       this.state.activeStep,
-      1,
+      1
     );
 
     this.setState({
@@ -251,7 +251,7 @@ export default class Edit extends Component {
   save() {
     const dataRef = ref(storage, this.props.data.name);
     uploadString(dataRef, JSON.stringify(this.state.data)).then(() =>
-      toast("Data saved"),
+      toast("Data saved")
     );
   }
 
@@ -302,7 +302,7 @@ export default class Edit extends Component {
           this.state.poseRobot.forEach((servo) => {
             if (servo.selected) {
               var foundarray = received_data.servos.filter(
-                (e) => e.id == servo.id,
+                (e) => e.id == servo.id
               );
               servo.state = foundarray[0].state;
               servo.value = foundarray[0].value;
@@ -521,22 +521,22 @@ export default class Edit extends Component {
                   {this.state.data.motions.map((motion, index) => (
                     <div key={index} className="mb-2 flex gap-2 ">
                       <h3
-                        className={`btn btn-sm h-9 w-2/12 rounded-xl border-none   ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-300 text-xs hover:bg-slate-300"}`}
+                        className={`btn btn-sm h-9 w-2/12 rounded-xl text-xs border-none   ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-300 text-xs hover:bg-slate-300"}`}
                       >
                         {index}
                       </h3>
                       <button
-                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl text-xs ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : ""}`}
+                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl text-xs border-none ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-xs text-slate-950 hover:bg-slate-100 border-none"}`}
                         onClick={() => this.handlerMotionClick(index)}
                       >
                         {motion.name}
                       </button>
                       <input
-                        className={`input input-sm h-9 w-3/12 rounded-xl  ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-xs hover:bg-slate-100"}`}
+                        className={`input input-sm h-9 w-3/12 rounded-xl text-xs ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-xs text-slate-950 hover:bg-slate-100"}`}
                         onChange={(event) =>
                           this.handlerChangeNextMotion(
                             event.target.value,
-                            index,
+                            index
                           )
                         }
                         value={motion.next}
