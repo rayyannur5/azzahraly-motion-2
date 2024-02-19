@@ -68,62 +68,63 @@ export default function NewProject({ handleCloseButton, handleData }) {
     let data = {
       servos: servos,
       motions: [],
+      idGroups: [],
     };
 
     const dataRef = ref(storage, `${name}.json`);
 
     uploadString(dataRef, JSON.stringify(data)).then((val) => {
-      handleData(name, servos);
+      handleData(`${name}.json`, data);
     });
   }
 
   return (
     <>
-      <div className="grid place-content-center item-center w-[82vw] h-screen bg-gradient-to-br from-cyan-500 to-sky-950 ">
-        <div className="grid place-content-center item-center w-[75vw] h-[85vh] rounded-xl first-line: backdrop-blur-sm bg-sky-200/30">
-          <div className="grid grid-cols-1 gap-7 content-center w-[65vw] h-[70vh]">
-            <header className="flex justify-center my-2">
+      <div className="item-center grid h-screen w-[82vw] place-content-center bg-gradient-to-br from-cyan-500 to-sky-950 ">
+        <div className="item-center first-line: grid h-[85vh] w-[75vw] place-content-center rounded-xl bg-sky-200/30 backdrop-blur-sm">
+          <div className="grid h-[70vh] w-[65vw] grid-cols-1 content-center gap-7">
+            <header className="my-2 flex justify-center">
               <img src={newTitle} alt="Recent Title" className="h-12 " />
             </header>
-            <div className="flex flex-row gap-4 justify-center items-center">
+            <div className="flex flex-row items-center justify-center gap-4">
               <input
                 type="text"
-                className="basis-1/2 input input-bordered text-base font-semibold text-center input-md block w-full max-w-xs rounded-xl bg-slate-50"
+                className="input input-bordered input-md block w-full max-w-xs basis-1/2 rounded-xl bg-slate-50 text-center text-base font-semibold"
                 placeholder="Project Name"
                 onChange={handleChangeName}
               />
               <input
                 type="number"
-                className="basis-1/2 input input-bordered text-base font-semibold text-center input-md block w-full max-w-xs rounded-xl bg-slate-50"
+                className="input input-bordered input-md block w-full max-w-xs basis-1/2 rounded-xl bg-slate-50 text-center text-base font-semibold"
                 placeholder="Number of Servo"
                 onChange={handleJumlahServo}
               />
               <button
-                className="basis-1/6 btn text-base font-semibold tracking-wide text-white rounded-xl bg-amber-500 border-none hover:bg-amber-600"
+                className="btn basis-1/6 rounded-xl border-none bg-amber-500 text-base font-semibold tracking-wide text-white hover:bg-amber-600"
                 onClick={saveProject}
               >
                 Save Project
               </button>
             </div>
-            <div className="flex justify-center items-center">
-              <div className="flex w-[56vw] h-[50vh] sm:rounded-lg">
-                <table className=" text-white w-full table table-pin-rows text-center">
-                  <thead className="flex text-white w-full font-medium text-base ">
-                    <tr className="flex w-full border-transparent bg-sky-900 rounded-lg">
-                      <th className="p-4 w-1/6 ">No</th>
-                      <th className="p-4 w-3/4 ">Type of Servo</th>
-                      <th className="p-4 w-3/4 ">ID Servo</th>
+            <div className="flex items-center justify-center">
+              <div className="flex h-[50vh] w-[56vw] sm:rounded-lg">
+                <table className=" table-pin-rows table w-full text-center text-white">
+                  <thead className="flex w-full text-base font-medium text-white ">
+                    <tr className="flex w-full rounded-lg border-transparent bg-sky-900">
+                      <th className="w-1/6 p-4 ">No</th>
+                      <th className="w-3/4 p-4 ">Type of Servo</th>
+                      <th className="w-3/4 p-4 ">ID Servo</th>
                     </tr>
                   </thead>
-                  <tbody className="flex flex-col w-full items-center justify-start font-medium text-base text-black overflow-y-scroll no-scrollbar h-[40vh] py-1">
+                  <tbody className="no-scrollbar flex h-[40vh] w-full flex-col items-center justify-start overflow-y-scroll py-1 text-base font-medium text-black">
                     {servos.map((servo, index) => (
                       <tr key={index} className="flex w-full border-none">
-                        <td className="p-1.5 w-1/6">
-                          <button className="btn w-full border-none bg-sky-900 rounded-xl text-white">
+                        <td className="w-1/6 p-1.5">
+                          <button className="btn w-full rounded-xl border-none bg-sky-900 text-white">
                             {index + 1}
                           </button>
                         </td>
-                        <td className="p-1.5 w-3/4">
+                        <td className="w-3/4 p-1.5">
                           <select
                             className="select select-bordered w-full rounded-xl bg-slate-50 text-center"
                             onChange={(event) =>
@@ -135,10 +136,10 @@ export default function NewProject({ handleCloseButton, handleData }) {
                             <option value="MX-28">MX-28</option>
                           </select>
                         </td>
-                        <td className="p-1.5 w-3/4">
+                        <td className="w-3/4 p-1.5">
                           <input
                             type="number"
-                            className="input input-bordered text-center bg-slate-50 w-full rounded-xl "
+                            className="input input-bordered w-full rounded-xl bg-slate-50 text-center "
                             placeholder="ID Servo"
                             onChange={(event) =>
                               handleChangeId(index, event.target.value)

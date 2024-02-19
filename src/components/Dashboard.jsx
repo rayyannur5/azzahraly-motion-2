@@ -18,69 +18,45 @@ export default function Dashboard({ handlerOpenRecentProject }) {
 
   return (
     <>
-      <div className="grid place-content-center item-center w-[82vw] h-screen bg-gradient-to-br from-cyan-500 to-sky-950 ">
-        <div className="grid place-content-center item-center w-[75vw] h-[85vh] rounded-xl backdrop-blur-sm bg-sky-200/30">
-          <div className="grid grid-cols-1 gap-6 content-center w-[65vw] h-[70vh]">
-            <header className="flex justify-center my-2">
+      <div className="item-center grid h-screen w-[82vw] place-content-center bg-gradient-to-br from-cyan-500 to-sky-950 ">
+        <div className="item-center grid h-[85vh] w-[75vw] place-content-center rounded-xl bg-sky-200/30 backdrop-blur-sm">
+          <div className="grid h-[70vh] w-[65vw] grid-cols-1 content-center gap-6">
+            <header className="my-2 flex justify-center">
               <img src={recentTitle} alt="Recent Title" className="h-12 " />
             </header>
             <div className="flex h-[57vh]">
-              <table className="text-white w-full table table-pin-rows items-center">
+              <table className="table-pin-rows table w-full items-center text-white">
                 {/* head */}
-                <thead className="flex text-white w-full font-medium text-base">
+                <thead className="flex w-full text-base font-medium text-white">
                   <tr className="flex w-full rounded-lg border-none bg-sky-900">
-                    <th className="p-4 w-1/12 text-center"> </th>
-                    <th className="p-4 w-1/3">File Name</th>
-                    <th className="p-4 w-1/3">Last Modified</th>
-                    <th className="p-4 w-1/4">Action</th>
+                    <th className="w-1/12 p-4 text-center"> </th>
+                    <th className="w-1/3 p-4">File Name</th>
+                    <th className="w-1/3 p-4">Last Modified</th>
+                    <th className="w-1/4 p-4">Action</th>
                   </tr>
                 </thead>
-                <tbody className="flex flex-col w-full items-center justify-start text-base overflow-y-scroll no-scrollbar h-[47vh]">
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>
+                <tbody className="no-scrollbar flex h-[47vh] w-full flex-col items-center justify-start overflow-y-scroll text-base">
                   {/* aktif */}
                   {list.map((project) => (
                     <tr
-                      className="flex w-full text-sky-800 font-semibold bg-sky-200 border-none rounded-md hover:bg-sky-300 hover:text-sky-950 hover:border-none py-1"
+                      className="border-b-1 flex w-full border-sky-100 py-1 font-normal text-gray-200 hover:bg-sky-300"
                       key={project.name}
                       onClick={() => handlerOpenRecentProject(project)}
                     >
-                      <td className="py-2 w-1/12 flex items-center justify-center">
+                      <td className="flex w-1/12 items-center justify-center py-2">
                         <img
                           src={azzahralyLogo}
                           alt="Azzahraly"
                           className="h-6"
                         />
                       </td>
-                      <td className="py-2 w-1/3 flex items-center justify-start">
+                      <td className="flex w-1/3 items-center justify-start py-2">
                         {project.name}
                       </td>
-                      <td className="py-2 w-1/3 flex items-center justify-start">
+                      <td className="flex w-1/3 items-center justify-start py-2">
                         23.00; 12/02/2023
                       </td>
-                      <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
+                      <td className="flex w-1/4 flex-row items-center justify-start gap-3 py-2 text-2xl ">
                         <button>
                           <MdDelete />
                         </button>
@@ -90,246 +66,6 @@ export default function Dashboard({ handlerOpenRecentProject }) {
                       </td>
                     </tr>
                   ))}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>{" "}
-                  {/* non aktif */}
-                  <tr className="flex w-full border-b-1 border-sky-100 font-normal text-gray-200 py-1">
-                    <td className="py-2 w-1/12 flex items-center justify-center ">
-                      <img
-                        src={azzahralyLogo}
-                        alt="Azzahraly"
-                        className="h-6"
-                      />
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      Cy Ganderton
-                    </td>
-                    <td className="py-2 w-1/3 flex items-center justify-start">
-                      23.00; 12/02/2023
-                    </td>
-                    <td className="flex flex-row items-center justify-start gap-3 text-2xl py-2 w-1/4 ">
-                      <div>
-                        <MdDelete />
-                      </div>
-                      <div>
-                        <HiDocumentDownload />
-                      </div>
-                    </td>
-                  </tr>
                 </tbody>
                 {/* <tbody className=" font-normal text-base text-white">
                   <tr>
