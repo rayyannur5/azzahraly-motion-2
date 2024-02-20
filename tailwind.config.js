@@ -20,6 +20,25 @@ module.exports = {
           "-ms-overflow-style": "none",
           "scrollbar-width": "none",
         },
+        ".transparent-scrollbar::-webkit-scrollbar": {
+          "background-color": "transparent",
+          width: "10px",
+        },
+        // ".transparent-scrollbar::-webkit-scrollbar-track": {
+        //   padding: "3px",
+        // },
+        ".transparent-scrollbar::-webkit-scrollbar-thumb": {
+          "background-color": "lightblue",
+          "border-radius": "10px",
+        },
+        "input::-webkit-outer-spin-button": {
+          "-webkit-appearance": "none",
+          margin: 0,
+        },
+        "input::-webkit-inner-spin-button": {
+          "-webkit-appearance": "none",
+          margin: 0,
+        },
       };
       addUtilities(newUtilities);
     },

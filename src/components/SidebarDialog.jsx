@@ -3,13 +3,12 @@ import appLogo from "../assets/logo.png";
 import { MdSpaceDashboard } from "react-icons/md";
 import { FaPlus } from "react-icons/fa";
 import { IoFolderOpen } from "react-icons/io5";
-import { IoSettings } from "react-icons/io5";
 import { BsInfoCircleFill } from "react-icons/bs";
 import { ToastContainer, toast } from "react-toastify";
 import { ref, uploadString } from "firebase/storage";
 import { storage } from "../firebase";
 
-export default function Sidebar({
+export default function SidebarDialog({
   handlerDashboard,
   handlerNewProject,
   handlerOpenProject,
@@ -61,14 +60,14 @@ export default function Sidebar({
 
   return (
     <>
-      <section className="h-screen  bg-sky-900 px-7">
+      <section className=" rounded-lg  bg-sky-900 px-7">
         <div className="mb-4 flex h-[10vh] items-center justify-center">
           <img src={appLogo} alt="Azzahraly" className="flex h-8 w-fit" />
         </div>
         <div className="flex flex-col gap-5">
           {/* active Button */}
           <button
-            className={`btn gap-3 px-6 text-base font-semibold tracking-wide ${aktif == 0 ? " justify-start rounded-xl border-none bg-amber-600 text-white hover:bg-amber-700" : " justify-start border-none bg-sky-900 text-neutral-300 hover:rounded-xl hover:bg-sky-950 hover:text-white"}`}
+            className={`btn  gap-3 px-6 text-base font-semibold tracking-wide ${aktif == 0 ? " justify-start rounded-xl border-none bg-amber-600 text-white hover:bg-amber-700" : " justify-start border-none bg-sky-900 text-neutral-300 hover:rounded-xl hover:bg-sky-950 hover:text-white"}`}
             onClick={() => {
               setAktif(0);
               handlerDashboard();
@@ -99,7 +98,7 @@ export default function Sidebar({
             Import Project
           </button>
           <button
-            className={`btn gap-3 px-6 text-base font-semibold tracking-wide ${aktif == 3 ? " justify-start rounded-xl border-none bg-amber-600 text-white hover:bg-amber-700" : " justify-start border-none bg-sky-900 text-neutral-300 hover:rounded-xl hover:bg-sky-950 hover:text-white"}`}
+            className={`btn mb-3 gap-3 px-6 text-base font-semibold tracking-wide ${aktif == 3 ? " justify-start rounded-xl border-none bg-amber-600 text-white hover:bg-amber-700" : " justify-start border-none bg-sky-900 text-neutral-300 hover:rounded-xl hover:bg-sky-950 hover:text-white"}`}
             onClick={() => {
               setAktif(3);
               handlerAbout();

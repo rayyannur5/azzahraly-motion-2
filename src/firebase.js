@@ -6,16 +6,16 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyCbnvBP2T9ivi4UbBGDKCDdH9Fw-dkZmlE",
-  authDomain: "azzahraly-motion-2.firebaseapp.com",
-  projectId: "azzahraly-motion-2",
-  storageBucket: "azzahraly-motion-2.appspot.com",
-  messagingSenderId: "956655974632",
-  appId: "1:956655974632:web:733a69718aa2d4e467315d"
+  apiKey: "AIzaSyDVTw07uAnBruFMeS0Lu8G83dz0JTC6BIE",
+  authDomain: "azzahraly-motion.firebaseapp.com",
+  projectId: "azzahraly-motion",
+  storageBucket: "azzahraly-motion.appspot.com",
+  messagingSenderId: "1022489106438",
+  appId: "1:1022489106438:web:fabd02c229cef840aa4b87",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const storage = getStorage(app);
 
-export {app, storage}
+export { app, storage };

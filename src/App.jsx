@@ -5,6 +5,9 @@ import Edit from "./components/Edit";
 import Dashboard from "./components/Dashboard";
 import { getBytes, ref } from "firebase/storage";
 import { storage } from "./firebase";
+import SidebarDialog from "./components/SidebarDialog";
+import About from "./components/About";
+import { IoMenu } from "react-icons/io5";
 
 class App extends Component {
   state = {
@@ -12,6 +15,7 @@ class App extends Component {
     onNewProject: false,
     onEdit: false,
     onDashboard: false,
+    onAbout: false,
     editData: {
       name: null,
       data: null,
@@ -26,6 +30,7 @@ class App extends Component {
     this.handleNewProjectData = this.handleNewProjectData.bind(this);
     this.handlerOpenRecentProject = this.handlerOpenRecentProject.bind(this);
     this.handlerDashboard = this.handlerDashboard.bind(this);
+    this.handlerAbout = this.handlerAbout.bind(this);
   }
 
   handlerNewProject() {
@@ -50,9 +55,19 @@ class App extends Component {
 
   handlerOpenProject() {}
 
+  handlerAbout() {
+    this.setState({
+      onNewProject: false,
+      onDashboard: false,
+      onEdit: false,
+      onAbout: true,
+    });
+  }
+
   handlerOpenRecentProject(project) {
     const refProject = ref(storage, project.fullPath);
     getBytes(refProject).then((res) => {
+      console.log(res);
       var enc = new TextDecoder("utf-8");
       const data = JSON.parse(enc.decode(res));
       this.setState({
@@ -70,6 +85,7 @@ class App extends Component {
       onDashboard: true,
       onEdit: false,
       onNewProject: false,
+      onAbout: false,
     });
   }
 
@@ -82,23 +98,49 @@ class App extends Component {
   render() {
     return (
       <div className="flex flex-row">
-        <div className="h-screen flex flex-col justify-between font-Inter">
+        <div className="font-Inter flex h-screen flex-col justify-between sm:w-0 md:w-0 lg:w-0 xl:w-[18vw]">
           <Sidebar
             handlerNewProject={this.handlerNewProject}
             handlerOpenProject={this.handlerOpenProject}
             handlerDashboard={this.handlerDashboard}
+            handlerAbout={this.handlerAbout}
           />
         </div>
-        {this.state.onNewProject ? (
-          <NewProject
-            handleCloseButton={this.handlerCloseNewProject}
-            handleData={this.handleNewProjectData}
-          />
-        ) : this.state.onEdit ? (
-          <Edit data={this.state.editData} />
-        ) : (
-          <Dashboard handlerOpenRecentProject={this.handlerOpenRecentProject} />
-        )}
+        <div className="sm:w-screen md:w-screen lg:w-screen xl:w-[82vw]">
+          {this.state.onNewProject ? (
+            <NewProject
+              handleCloseButton={this.handlerCloseNewProject}
+              handleData={this.handleNewProjectData}
+            />
+          ) : this.state.onEdit ? (
+            <Edit data={this.state.editData} />
+          ) : this.state.onAbout ? (
+            <About />
+          ) : (
+            <Dashboard
+              handlerOpenRecentProject={this.handlerOpenRecentProject}
+            />
+          )}
+        </div>
+        <div className="absolute left-2 top-2 xl:hidden">
+          <div className="dropdown">
+            <div
+              tabIndex={0}
+              role="button"
+              className="btn m-1 border-0 bg-sky-900 text-white"
+            >
+              <IoMenu />
+            </div>
+            <div className="dropdown-content w-72 shadow-lg">
+              <SidebarDialog
+                handlerNewProject={this.handlerNewProject}
+                handlerOpenProject={this.handlerOpenProject}
+                handlerDashboard={this.handlerDashboard}
+                handlerAbout={this.handlerAbout}
+              />
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

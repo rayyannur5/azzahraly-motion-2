@@ -14,6 +14,8 @@ import {
   MdOutlineUsbOff,
   MdDelete,
   MdEdit,
+  MdLogout,
+  MdChecklist,
 } from "react-icons/md";
 import { FaCirclePlay, FaCircleStop } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
@@ -23,10 +25,12 @@ import motionGroup from "../assets/motiongroup.png";
 import poseofStep from "../assets/poseofstep.png";
 import poseofRobot from "../assets/poseofrobot.png";
 import Serial from "../Serial";
+import { BsArrowLeftCircle } from "react-icons/bs";
 
 export default class Edit extends Component {
   serial = new Serial();
   stopMotion = false;
+  activeTab = "";
 
   constructor(props) {
     super(props);
@@ -61,12 +65,53 @@ export default class Edit extends Component {
     this.sendPose = this.sendPose.bind(this);
     this.getPose = this.getPose.bind(this);
     this.play = this.play.bind(this);
+    this.generate = this.generate.bind(this);
+    this.importMotion = this.importMotion.bind(this);
+    this.handlerImportMotion = this.handlerImportMotion.bind(this);
+    this.buttonImportMotion = this.buttonImportMotion.bind(this);
 
     window.addEventListener("keydown", (event) => {
       /*Allows for a case-insensitive shortcut*/
       if (event.ctrlKey && (event.key === "S" || event.key === "s")) {
         event.preventDefault();
         this.save();
+      } else if (event.ctrlKey && (event.key === "C" || event.key === "c")) {
+        event.preventDefault();
+        if (this.activeTab == "motion") {
+          const temp = JSON.stringify(
+            this.state.data.motions[this.state.activeMotion],
+          );
+          navigator.clipboard.writeText(temp);
+        } else if (this.activeTab == "step") {
+          const temp = JSON.stringify(
+            this.state.data.motions[this.state.activeMotion].steps[
+              this.state.activeStep
+            ],
+          );
+          navigator.clipboard.writeText(temp);
+        }
+      } else if (event.ctrlKey && (event.key === "V" || event.key === "v")) {
+        navigator.clipboard.readText().then((res) => {
+          try {
+            const dataClipboard = JSON.parse(res);
+            console.log(dataClipboard);
+            if (this.activeTab == "motion") {
+              this.state.data.motions.push(dataClipboard);
+              this.setState({
+                data: this.state.data,
+              });
+            } else if (this.activeTab == "step") {
+              this.state.data.motions[this.state.activeMotion].steps.push(
+                dataClipboard,
+              );
+              this.setState({
+                data: this.state.data,
+              });
+            }
+          } catch (error) {
+            toast(error);
+          }
+        });
       }
     });
   }
@@ -162,6 +207,7 @@ export default class Edit extends Component {
   }
 
   handlerMotionClick(index) {
+    this.activeTab = "motion";
     this.setState({
       activeMotion: index,
       activeStep: null,
@@ -213,6 +259,7 @@ export default class Edit extends Component {
   }
 
   handlerStepClick(index) {
+    this.activeTab = "step";
     this.setState({
       activeStep: index,
     });
@@ -226,7 +273,7 @@ export default class Edit extends Component {
 
     this.state.data.motions[this.state.activeMotion].steps.splice(
       this.state.activeStep,
-      1
+      1,
     );
 
     this.setState({
@@ -261,7 +308,7 @@ export default class Edit extends Component {
   save() {
     const dataRef = ref(storage, this.props.data.name);
     uploadString(dataRef, JSON.stringify(this.state.data)).then(() =>
-      toast("Data saved")
+      toast("Data saved"),
     );
   }
 
@@ -324,7 +371,7 @@ export default class Edit extends Component {
             this.state.poseRobot.forEach((servo) => {
               if (servo.selected) {
                 var foundarray = received_data.servos.filter(
-                  (e) => e.id == servo.id
+                  (e) => e.id == servo.id,
                 );
                 servo.state = foundarray[0].state;
                 servo.value = foundarray[0].value;
@@ -450,10 +497,99 @@ export default class Edit extends Component {
     // await writer.write("aaaaa*" + command + "#");
   }
 
+  generate() {
+    if (this.state.activeMotion == null) {
+      toast("Select motion first");
+      return;
+    }
+    const dataMotion = this.state.data.motions[this.state.activeMotion];
+    let function_name = dataMotion.name.replaceAll(" ", "");
+    let result = `void ${function_name} () {\n\tdigitalWrite(BL, HIGH);\n`;
+    dataMotion.steps.forEach((step, index) => {
+      result += `\t// STEP ${index}\n\tsetBase(`;
+      step.value.forEach((val, indexStep) => {
+        result += `${val}${step.value.length - 1 == indexStep ? "" : ","}`;
+      });
+      result += ");\n";
+      result += `\tMotionPagePlay(base, ${step.time}, ${step.pause}, 0, 0);\n`;
+      if (index == 0) {
+        result += "\tdigitalWrite(BL, LOW);\n";
+      }
+    });
+    result += "}";
+    navigator.clipboard.writeText(result).then(() => {
+      toast("Motion copied!");
+    });
+  }
+
+  importMotion(data) {
+    data = data.replaceAll("\t", "");
+    let data_split = data.split(" ");
+    let data_enter = data.split("\n");
+    data = data.replaceAll("\n", "");
+
+    let result = {
+      name: data_split[1],
+      steps: Array(),
+      next: 0,
+    };
+
+    data_enter.forEach((val) => {
+      const posVal = val.search("setBase");
+      if (posVal != -1) {
+        const step_val = val.substring(8, val.length - 2);
+        const step_val_split = step_val.split(",");
+        result.steps.push({
+          value: step_val_split,
+          time: 0,
+          pause: 0,
+        });
+      }
+      const posTime = val.search("MotionPagePlay");
+      if (posTime != -1) {
+        const time_str = val.substring(15, val.length - 2);
+        const time_split = time_str.split(",");
+        result.steps[result.steps.length - 1].time = Number(time_split[1]);
+        result.steps[result.steps.length - 1].pause = Number(time_split[2]);
+      }
+    });
+
+    return result;
+  }
+
+  handlerImportMotion(event) {
+    let data = event.target.value;
+
+    const result = this.importMotion(data);
+
+    let elementHtml = `
+      <div class="flex flex-col p-2">
+        <div>Name : ${result.name}</div>
+      `;
+    result.steps.forEach((step, index) => {
+      elementHtml += `<div class="flex"> step ${index} : ${step.value.map((val) => val)} [time : ${step.time}] [pause : ${step.pause}]</div>`;
+    });
+
+    elementHtml += `</div>`;
+
+    const element = (document.getElementById(
+      "import_motion_temporary",
+    ).innerHTML = elementHtml);
+  }
+
+  buttonImportMotion() {
+    const data = document.getElementById("textarea_import_motion").value;
+    const result = this.importMotion(data);
+    this.state.data.motions.push(result);
+    this.setState({
+      data: this.state.data,
+    });
+  }
+
   render() {
     return (
       <>
-        <div className="flex h-screen w-[82vw] flex-col bg-gradient-to-br from-cyan-500 to-sky-950 ">
+        <div className="flex h-screen flex-col bg-gradient-to-br from-cyan-500 to-sky-950 ">
           <div className="flex h-[10vh] justify-end bg-sky-900 ">
             <div className="relative m-4 flex items-center gap-3">
               <div className="pr-4 text-base font-semibold text-white">
@@ -473,8 +609,8 @@ export default class Edit extends Component {
               </button>
             </div>
           </div>
-          <div className="flex h-[9vh] flex-row">
-            <div className="flex h-full w-1/2 items-center justify-start gap-3 p-4">
+          <div className="flex h-[9vh] flex-row justify-between">
+            <div className="flex h-full items-center justify-start gap-3 p-4">
               <button
                 className="btn btn-sm h-10 w-fit items-center justify-center rounded-xl border-none bg-yellow-500 text-sm font-bold tracking-wide text-white hover:bg-yellow-600"
                 onClick={() =>
@@ -483,6 +619,15 @@ export default class Edit extends Component {
               >
                 <FaPlus className="mr-1.2" />
                 New Motion
+              </button>
+              <button
+                className="btn btn-sm h-10 w-fit items-center justify-center rounded-xl border-none bg-yellow-500 text-sm font-bold tracking-wide text-white hover:bg-yellow-600"
+                onClick={() =>
+                  document.getElementById("modal_import_motion").showModal()
+                }
+              >
+                <FaPlus className="mr-1.2" />
+                Import Motion
               </button>
               <button
                 className="btn btn-sm h-10 w-10 rounded-xl border-none bg-yellow-500 text-lg text-white hover:bg-yellow-600"
@@ -512,9 +657,15 @@ export default class Edit extends Component {
               >
                 <MdEdit />
               </button>
+              <button
+                className="btn btn-sm h-10 w-10 rounded-xl border-none bg-yellow-500 text-lg text-white hover:bg-yellow-600"
+                onClick={this.generate}
+              >
+                <MdLogout />
+              </button>
             </div>
-            <div className="flex h-full w-1/2 items-center justify-end px-8 py-2">
-              <div className="flex h-full w-2/5 items-center justify-center gap-3">
+            <div className="flex h-full w-[19vw] items-center justify-center px-8 py-2">
+              <div className="flex h-full items-center justify-center gap-3">
                 <button
                   className="btn btn-sm h-10 w-10 rounded-full border-none bg-slate-50 text-xl font-extrabold text-green-500 drop-shadow-md hover:bg-slate-50 hover:text-green-600 hover:drop-shadow-md"
                   onClick={this.on}
@@ -550,21 +701,23 @@ export default class Edit extends Component {
                     <div key={index} className="mb-2 flex gap-2 ">
                       <h3
                         className={`btn btn-sm h-9 w-2/12 rounded-xl border-none   ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-300 hover:bg-slate-300"}`}
+                        onClick={() => this.handlerMotionClick(index)}
                       >
                         {index}
                       </h3>
                       <button
-                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl border-none ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "bg-slate-50 text-slate-950 hover:bg-slate-100 border-none"}`}
+                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl border-none ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "border-none bg-slate-50 text-slate-950 hover:bg-slate-100"}`}
                         onClick={() => this.handlerMotionClick(index)}
                       >
                         {motion.name}
                       </button>
                       <input
-                        className={`input input-sm h-9 w-3/12 rounded-xl ${this.state.activeMotion == index ? "border-none text-center bg-cyan-600 text-slate-50  font-medium hover:border-none hover:bg-cyan-700 " : "bg-slate-50 text-center text-slate-950 font-medium  hover:bg-slate-100"}`}
+                        className={`input input-sm h-9 w-3/12 rounded-xl ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-center font-medium  text-slate-50 hover:border-none hover:bg-cyan-700 " : "bg-slate-50 text-center font-medium text-slate-950  hover:bg-slate-100"}`}
+                        type="number"
                         onChange={(event) =>
                           this.handlerChangeNextMotion(
                             event.target.value,
-                            index
+                            index,
                           )
                         }
                         value={motion.next}
@@ -574,7 +727,7 @@ export default class Edit extends Component {
                 </div>
               </div>
               <div className="flex h-full w-7/12 flex-col gap-4">
-                <div className="flex h-1/2 w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
+                <div className="flex h-[39vh] w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
                   <div className="flex justify-center font-bold">
                     <img
                       src={motionStep}
@@ -587,7 +740,7 @@ export default class Edit extends Component {
                     <h3 className="w-2/5 text-base font-bold">Time</h3>
                     <h3 className="w-2/5 text-base font-bold">Pause</h3>
                   </div>
-                  <div className="h-[23vh] overflow-y-auto px-2 py-1">
+                  <div className=" transparent-scrollbar overflow-y-auto px-2 py-1">
                     {this.state.activeMotion != null ? (
                       this.state.data.motions[
                         this.state.activeMotion
@@ -601,7 +754,7 @@ export default class Edit extends Component {
                           </button>
                           <input
                             type="number"
-                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 text-center hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
+                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-center text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
                             onChange={(event) =>
                               this.handlerChangeTime(event.target.value, index)
                             }
@@ -609,7 +762,7 @@ export default class Edit extends Component {
                           />
                           <input
                             type="number"
-                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 text-center hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
+                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-center text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
                             onChange={(event) =>
                               this.handlerChangePause(event.target.value, index)
                             }
@@ -622,7 +775,7 @@ export default class Edit extends Component {
                     )}
                   </div>
                 </div>
-                <div className="flex h-1/2 w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
+                <div className="flex h-[39vh] w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
                   <div className="flex justify-center font-bold">
                     <img
                       src={motionGroup}
@@ -630,12 +783,12 @@ export default class Edit extends Component {
                       className="mb-2 h-7"
                     />
                   </div>
-                  <div className="h-[28vh] overflow-y-auto px-2 py-1">
+                  <div className=" transparent-scrollbar overflow-auto px-2 py-1">
                     <div className="mb-2 flex flex-col gap-2">
                       {this.state.data.idGroups.map((group, index) => (
                         <button
                           key={index}
-                          className={`btn btn-sm h-9 w-full rounded-xl border-none ${this.state.activeIdGroup == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "bg-slate-50 text-slate-950 hover:bg-slate-100 border-none"}`}
+                          className={`btn btn-sm h-9 w-full rounded-xl border-none ${this.state.activeIdGroup == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "border-none bg-slate-50 text-slate-950 hover:bg-slate-100"}`}
                           onClick={() => this.selectIdGroup(index)}
                         >
                           {group.name}
@@ -693,7 +846,7 @@ export default class Edit extends Component {
                   <h3 className="w-1/5 text-base font-bold">No</h3>
                   <h3 className="w-4/5 text-base font-bold">Value</h3>
                 </div>
-                <div className="h-[62vh] overflow-y-auto px-2 py-1">
+                <div className="transparent-scrollbar h-[62vh] overflow-y-auto px-2 py-1">
                   {this.state.activeStep != null ? (
                     this.state.data.motions[this.state.activeMotion].steps[
                       this.state.activeStep
@@ -707,7 +860,7 @@ export default class Edit extends Component {
                         </button>
                         <input
                           type="number"
-                          className={`input input-sm h-9 w-4/5 rounded-xl bg-slate-50 text-slate-950 text-center hover:bg-slate-100`}
+                          className={`input input-sm h-9 w-4/5 rounded-xl bg-slate-50 text-center text-slate-950 hover:bg-slate-100`}
                           key={index}
                           onChange={(event) =>
                             this.handlerChangeStepVal(event.target.value, index)
@@ -751,7 +904,7 @@ export default class Edit extends Component {
                   <h3 className="w-1/5 text-base font-bold">No</h3>
                   <h3 className="w-4/5 text-base font-bold">Value</h3>
                 </div>
-                <div className="h-[62vh] overflow-y-auto px-2 py-1">
+                <div className="transparent-scrollbar h-[62vh] overflow-y-auto px-2 py-1">
                   {this.state.connected ? (
                     this.state.poseRobot.map((val, index) => (
                       <div className="mb-2 flex gap-2" key={index}>
@@ -763,7 +916,7 @@ export default class Edit extends Component {
                         </button>
                         <button
                           type="number"
-                          className={`input input-sm flex h-9 w-4/5 items-center justify-center rounded-xl text-slate-950 text-center ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-50 hover:bg-slate-100"}`}
+                          className={`input input-sm flex h-9 w-4/5 items-center justify-center rounded-xl text-center text-slate-950 ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-50 hover:bg-slate-100"}`}
                           key={index}
                           onClick={() => this.selectServo(index)}
                         >
@@ -881,6 +1034,35 @@ export default class Edit extends Component {
                   onClick={this.saveIdGroup}
                 >
                   Save
+                </button>
+              </form>
+            </div>
+          </div>
+        </dialog>
+        <dialog id="modal_import_motion" className="modal">
+          <div className="modal-box w-11/12 max-w-5xl">
+            <h3 className="mb-6 flex justify-center text-lg font-bold ">
+              Import Motion
+            </h3>
+            <div className="flex flex-col">
+              <textarea
+                id="textarea_import_motion"
+                className="textarea textarea-bordered"
+                placeholder="Paste here"
+                onChange={this.handlerImportMotion}
+              ></textarea>
+              <div id="import_motion_temporary"></div>
+            </div>
+            <div className="modal-action">
+              <form method="dialog">
+                <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+                  Close
+                </button>
+                <button
+                  className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                  onClick={this.buttonImportMotion}
+                >
+                  Import
                 </button>
               </form>
             </div>
