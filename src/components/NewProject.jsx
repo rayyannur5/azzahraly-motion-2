@@ -89,7 +89,7 @@ export default function NewProject({ handleCloseButton, handleData }) {
             <div className="flex flex-row items-center justify-center gap-4">
               <input
                 type="text"
-                className="input input-bordered input-md block w-full max-w-xs basis-1/2 rounded-xl bg-slate-50 text-center text-base font-semibold"
+                className="input input-bordered input-md block w-full max-w-xs basis-1/2 rounded-xl bg-slate-50 text-center text-base font-semibold active:text-slate-950"
                 placeholder="Project Name"
                 onChange={handleChangeName}
               />

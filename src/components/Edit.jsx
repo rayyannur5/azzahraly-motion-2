@@ -19,6 +19,7 @@ import { FaCirclePlay, FaCircleStop } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import motionUnit from "../assets/motionunit.png";
 import motionStep from "../assets/motionstep.png";
+import motionGroup from "../assets/motiongroup.png";
 import poseofStep from "../assets/poseofstep.png";
 import poseofRobot from "../assets/poseofrobot.png";
 import Serial from "../Serial";
@@ -295,28 +296,6 @@ export default class Edit extends Component {
       if (value.endsWith("#")) {
         start = false;
         message = message.substring(1, message.length - 1);
-<<<<<<< HEAD
-        const received_data = JSON.parse(message);
-        if (received_data.type == "c") {
-          this.state.connected = true;
-
-          received_data.servos.forEach((servo) => {
-            servo.selected = false;
-          });
-
-          this.setState({
-            connected: true,
-            poseRobot: received_data.servos,
-          });
-        } else if (received_data.type == "r") {
-          this.state.poseRobot.forEach((servo) => {
-            if (servo.selected) {
-              var foundarray = received_data.servos.filter(
-                (e) => e.id == servo.id
-              );
-              servo.state = foundarray[0].state;
-              servo.value = foundarray[0].value;
-=======
         console.log(message);
         if (message == "OK") {
           if (this.state.data.motions[this.state.activeMotion].next != 0) {
@@ -326,7 +305,6 @@ export default class Edit extends Component {
             });
             if (this.stopMotion) {
               this.play();
->>>>>>> 1208216707c6ef8c595476121f6fc3f5f7caf910
             }
           }
         } else {
@@ -346,7 +324,7 @@ export default class Edit extends Component {
             this.state.poseRobot.forEach((servo) => {
               if (servo.selected) {
                 var foundarray = received_data.servos.filter(
-                  (e) => e.id == servo.id,
+                  (e) => e.id == servo.id
                 );
                 servo.state = foundarray[0].state;
                 servo.value = foundarray[0].value;
@@ -562,27 +540,27 @@ export default class Edit extends Component {
                     className="mb-2 h-7"
                   />
                 </div>
-                <div className="flex gap-2 border-none px-2 text-center  font-semibold tracking-wide text-slate-950">
-                  <h3 className="w-2/12 text-sm">No</h3>
-                  <h3 className=" w-4/12 grow text-sm">Name</h3>
-                  <h3 className="w-3/12 text-sm">Next</h3>
+                <div className="flex gap-2 border-none px-2 text-center font-semibold text-slate-950">
+                  <h3 className="w-2/12 text-base font-bold">No</h3>
+                  <h3 className=" w-4/12 grow text-base font-bold">Name</h3>
+                  <h3 className="w-3/12 text-base font-bold">Next</h3>
                 </div>
                 <div className="overflow-y-auto px-2 py-1">
                   {this.state.data.motions.map((motion, index) => (
                     <div key={index} className="mb-2 flex gap-2 ">
                       <h3
-                        className={`btn btn-sm h-9 w-2/12 rounded-xl text-xs border-none   ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-300 text-xs hover:bg-slate-300"}`}
+                        className={`btn btn-sm h-9 w-2/12 rounded-xl border-none   ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-300 hover:bg-slate-300"}`}
                       >
                         {index}
                       </h3>
                       <button
-                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl text-xs border-none ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-xs text-slate-950 hover:bg-slate-100 border-none"}`}
+                        className={`btn btn-sm h-9 w-4/12 grow rounded-xl border-none ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "bg-slate-50 text-slate-950 hover:bg-slate-100 border-none"}`}
                         onClick={() => this.handlerMotionClick(index)}
                       >
                         {motion.name}
                       </button>
                       <input
-                        className={`input input-sm h-9 w-3/12 rounded-xl text-xs ${this.state.activeMotion == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-xs text-slate-950 hover:bg-slate-100"}`}
+                        className={`input input-sm h-9 w-3/12 rounded-xl ${this.state.activeMotion == index ? "border-none text-center bg-cyan-600 text-slate-50  font-medium hover:border-none hover:bg-cyan-700 " : "bg-slate-50 text-center text-slate-950 font-medium  hover:bg-slate-100"}`}
                         onChange={(event) =>
                           this.handlerChangeNextMotion(
                             event.target.value,
@@ -604,10 +582,10 @@ export default class Edit extends Component {
                       className="mb-2 h-7"
                     />
                   </div>
-                  <div className="flex gap-2 border-none px-2 text-center  font-semibold tracking-wide text-slate-950">
-                    <h3 className="w-1/5 text-sm">No</h3>
-                    <h3 className="w-2/5 text-sm">Time</h3>
-                    <h3 className="w-2/5 text-sm">Pause</h3>
+                  <div className="flex gap-2 border-none px-2 text-center  font-semibold text-slate-950">
+                    <h3 className="w-1/5 text-base font-bold">No</h3>
+                    <h3 className="w-2/5 text-base font-bold">Time</h3>
+                    <h3 className="w-2/5 text-base font-bold">Pause</h3>
                   </div>
                   <div className="h-[23vh] overflow-y-auto px-2 py-1">
                     {this.state.activeMotion != null ? (
@@ -616,14 +594,14 @@ export default class Edit extends Component {
                       ].steps.map((step, index) => (
                         <div className="mb-2 flex gap-2" key={index}>
                           <button
-                            className={`btn btn-sm h-9 basis-1/5 rounded-xl   ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "border-none bg-slate-300 text-xs hover:bg-slate-300"}`}
+                            className={`btn btn-sm h-9 basis-1/5 rounded-xl   ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "border-none bg-slate-300 hover:bg-slate-300"}`}
                             onClick={() => this.handlerStepClick(index)}
                           >
                             {index}
                           </button>
                           <input
                             type="number"
-                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-xs hover:bg-slate-100"}`}
+                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 text-center hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
                             onChange={(event) =>
                               this.handlerChangeTime(event.target.value, index)
                             }
@@ -631,7 +609,7 @@ export default class Edit extends Component {
                           />
                           <input
                             type="number"
-                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-xs hover:bg-slate-100"}`}
+                            className={`input input-sm h-9 w-2/5 rounded-xl  ${this.state.activeStep == index ? "border-none bg-cyan-600 text-slate-50 text-center hover:border-none hover:bg-cyan-700" : "bg-slate-50 text-center text-slate-950  hover:bg-slate-100"}`}
                             onChange={(event) =>
                               this.handlerChangePause(event.target.value, index)
                             }
@@ -647,17 +625,17 @@ export default class Edit extends Component {
                 <div className="flex h-1/2 w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
                   <div className="flex justify-center font-bold">
                     <img
-                      src={motionStep}
-                      alt="Motion Step"
+                      src={motionGroup}
+                      alt="Motion Group"
                       className="mb-2 h-7"
                     />
                   </div>
-                  <div className="h-[24vh] overflow-y-auto px-2 py-1">
+                  <div className="h-[28vh] overflow-y-auto px-2 py-1">
                     <div className="mb-2 flex flex-col gap-2">
                       {this.state.data.idGroups.map((group, index) => (
                         <button
                           key={index}
-                          className={`btn btn-sm h-9 w-full rounded-xl border-none text-xs ${this.state.activeIdGroup == index ? "bg-cyan-600 text-slate-50 hover:bg-cyan-700" : ""}`}
+                          className={`btn btn-sm h-9 w-full rounded-xl border-none ${this.state.activeIdGroup == index ? "border-none bg-cyan-600 text-slate-50 hover:border-none hover:bg-cyan-700  " : "bg-slate-50 text-slate-950 hover:bg-slate-100 border-none"}`}
                           onClick={() => this.selectIdGroup(index)}
                         >
                           {group.name}
@@ -712,8 +690,8 @@ export default class Edit extends Component {
                   />
                 </div>
                 <div className="flex gap-2 border-none px-2 text-center  font-semibold tracking-wide text-slate-950">
-                  <h3 className="w-1/5 text-sm">No</h3>
-                  <h3 className="w-4/5 text-sm">Value</h3>
+                  <h3 className="w-1/5 text-base font-bold">No</h3>
+                  <h3 className="w-4/5 text-base font-bold">Value</h3>
                 </div>
                 <div className="h-[62vh] overflow-y-auto px-2 py-1">
                   {this.state.activeStep != null ? (
@@ -722,14 +700,14 @@ export default class Edit extends Component {
                     ].value.map((val, index) => (
                       <div className="mb-2 flex gap-2" key={index}>
                         <button
-                          className={`btn btn-sm h-9 basis-1/5 rounded-xl border-none bg-slate-300 text-xs hover:bg-slate-300 `}
+                          className={`btn btn-sm h-9 basis-1/5 rounded-xl border-none bg-slate-300 hover:bg-slate-300 `}
                           onClick={() => this.handlerIdPoseStepClick(index)}
                         >
                           {this.state.data.servos[index].id}
                         </button>
                         <input
                           type="number"
-                          className={`input input-sm h-9 w-4/5 rounded-xl bg-slate-50 text-center text-xs hover:bg-slate-100`}
+                          className={`input input-sm h-9 w-4/5 rounded-xl bg-slate-50 text-slate-950 text-center hover:bg-slate-100`}
                           key={index}
                           onChange={(event) =>
                             this.handlerChangeStepVal(event.target.value, index)
@@ -770,22 +748,22 @@ export default class Edit extends Component {
                   />
                 </div>
                 <div className="flex gap-2 border-none px-2 text-center  font-semibold tracking-wide text-slate-950">
-                  <h3 className="w-1/5 text-sm">No</h3>
-                  <h3 className="w-4/5 text-sm">Value</h3>
+                  <h3 className="w-1/5 text-base font-bold">No</h3>
+                  <h3 className="w-4/5 text-base font-bold">Value</h3>
                 </div>
                 <div className="h-[62vh] overflow-y-auto px-2 py-1">
                   {this.state.connected ? (
                     this.state.poseRobot.map((val, index) => (
                       <div className="mb-2 flex gap-2" key={index}>
                         <button
-                          className={`btn btn-sm h-9 basis-1/5 rounded-xl border-none text-xs  ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-300 hover:bg-slate-300"} `}
+                          className={`btn btn-sm h-9 basis-1/5 rounded-xl border-none ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-300 hover:bg-slate-300"} `}
                           onClick={() => this.selectServo(index)}
                         >
                           {val.id}
                         </button>
                         <button
                           type="number"
-                          className={`input input-sm flex h-9 w-4/5 items-center justify-center rounded-xl  text-center text-xs  ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-50 hover:bg-slate-100"}`}
+                          className={`input input-sm flex h-9 w-4/5 items-center justify-center rounded-xl text-slate-950 text-center ${val.selected ? "bg-cyan-600 text-slate-50 hover:bg-cyan-600" : "bg-slate-50 hover:bg-slate-100"}`}
                           key={index}
                           onClick={() => this.selectServo(index)}
                         >
