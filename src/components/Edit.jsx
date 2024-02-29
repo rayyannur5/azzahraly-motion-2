@@ -25,7 +25,7 @@ import motionGroup from "../assets/motiongroup.png";
 import poseofStep from "../assets/poseofstep.png";
 import poseofRobot from "../assets/poseofrobot.png";
 import Serial from "../Serial";
-import { BsArrowLeftCircle } from "react-icons/bs";
+import { BsArrowLeftCircle, BsMicMuteFill } from "react-icons/bs";
 
 export default class Edit extends Component {
   serial = new Serial();
@@ -347,6 +347,7 @@ export default class Edit extends Component {
         if (message == "OK") {
           if (this.state.data.motions[this.state.activeMotion].next != 0) {
             const next = this.state.data.motions[this.state.activeMotion].next;
+            this.state.activeMotion = next;
             this.setState({
               activeMotion: next,
             });
@@ -355,34 +356,38 @@ export default class Edit extends Component {
             }
           }
         } else {
-          const received_data = JSON.parse(message);
-          if (received_data.type == "c") {
-            this.state.connected = true;
+          try {
+            const received_data = JSON.parse(message);
+            if (received_data.type == "c") {
+              this.state.connected = true;
 
-            received_data.servos.forEach((servo) => {
-              servo.selected = false;
-            });
+              received_data.servos.forEach((servo) => {
+                servo.selected = false;
+              });
 
-            this.setState({
-              connected: true,
-              poseRobot: received_data.servos,
-            });
-          } else if (received_data.type == "r") {
-            this.state.poseRobot.forEach((servo) => {
-              if (servo.selected) {
-                var foundarray = received_data.servos.filter(
-                  (e) => e.id == servo.id,
-                );
-                servo.state = foundarray[0].state;
-                servo.value = foundarray[0].value;
-              }
-            });
+              this.setState({
+                connected: true,
+                poseRobot: received_data.servos,
+              });
+            } else if (received_data.type == "r") {
+              this.state.poseRobot.forEach((servo) => {
+                if (servo.selected) {
+                  var foundarray = received_data.servos.filter(
+                    (e) => e.id == servo.id,
+                  );
+                  servo.state = foundarray[0].state;
+                  servo.value = foundarray[0].value;
+                }
+              });
 
-            this.setState({
-              poseRobot: this.state.poseRobot,
-            });
+              this.setState({
+                poseRobot: this.state.poseRobot,
+              });
+            }
+            console.log(received_data);
+          } catch (e) {
+            console.log(e);
           }
-          console.log(received_data);
         }
         message = "";
       }
@@ -539,6 +544,9 @@ export default class Edit extends Component {
       if (posVal != -1) {
         const step_val = val.substring(8, val.length - 2);
         const step_val_split = step_val.split(",");
+        step_val_split.forEach((val, index) => {
+          step_val_split[index] = Number(val);
+        });
         result.steps.push({
           value: step_val_split,
           time: 0,
