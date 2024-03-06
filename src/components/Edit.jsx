@@ -79,14 +79,14 @@ export default class Edit extends Component {
         event.preventDefault();
         if (this.activeTab == "motion") {
           const temp = JSON.stringify(
-            this.state.data.motions[this.state.activeMotion],
+            this.state.data.motions[this.state.activeMotion]
           );
           navigator.clipboard.writeText(temp);
         } else if (this.activeTab == "step") {
           const temp = JSON.stringify(
             this.state.data.motions[this.state.activeMotion].steps[
               this.state.activeStep
-            ],
+            ]
           );
           navigator.clipboard.writeText(temp);
         }
@@ -102,7 +102,7 @@ export default class Edit extends Component {
               });
             } else if (this.activeTab == "step") {
               this.state.data.motions[this.state.activeMotion].steps.push(
-                dataClipboard,
+                dataClipboard
               );
               this.setState({
                 data: this.state.data,
@@ -273,7 +273,7 @@ export default class Edit extends Component {
 
     this.state.data.motions[this.state.activeMotion].steps.splice(
       this.state.activeStep,
-      1,
+      1
     );
 
     this.setState({
@@ -308,7 +308,7 @@ export default class Edit extends Component {
   save() {
     const dataRef = ref(storage, this.props.data.name);
     uploadString(dataRef, JSON.stringify(this.state.data)).then(() =>
-      toast("Data saved"),
+      toast("Data saved")
     );
   }
 
@@ -373,7 +373,7 @@ export default class Edit extends Component {
               this.state.poseRobot.forEach((servo) => {
                 if (servo.selected) {
                   var foundarray = received_data.servos.filter(
-                    (e) => e.id == servo.id,
+                    (e) => e.id == servo.id
                   );
                   servo.state = foundarray[0].state;
                   servo.value = foundarray[0].value;
@@ -508,8 +508,15 @@ export default class Edit extends Component {
       return;
     }
     const dataMotion = this.state.data.motions[this.state.activeMotion];
+
+    let total_time = 0;
+
+    dataMotion.steps.forEach((step, index) => {
+      total_time += Number(step.time) + Number(step.pause);
+    });
+
     let function_name = dataMotion.name.replaceAll(" ", "");
-    let result = `void ${function_name} () {\n\tdigitalWrite(BL, HIGH);\n`;
+    let result = `// TOTAL TIME : ${total_time}\nvoid ${function_name} () {\n\tdigitalWrite(BL, HIGH);\n\tint time = ${total_time};\n\tint before = millis();\n\n`;
     dataMotion.steps.forEach((step, index) => {
       result += `\t// STEP ${index}\n\tsetBase(`;
       step.value.forEach((val, indexStep) => {
@@ -521,7 +528,7 @@ export default class Edit extends Component {
         result += "\tdigitalWrite(BL, LOW);\n";
       }
     });
-    result += "}";
+    result += "\n\twhile(millis() - before < time);\n}";
     navigator.clipboard.writeText(result).then(() => {
       toast("Motion copied!");
     });
@@ -581,7 +588,7 @@ export default class Edit extends Component {
     elementHtml += `</div>`;
 
     const element = (document.getElementById(
-      "import_motion_temporary",
+      "import_motion_temporary"
     ).innerHTML = elementHtml);
   }
 
@@ -704,7 +711,7 @@ export default class Edit extends Component {
                   <h3 className=" w-4/12 grow text-base font-bold">Name</h3>
                   <h3 className="w-3/12 text-base font-bold">Next</h3>
                 </div>
-                <div className="overflow-y-auto px-2 py-1">
+                <div className="overflow-y-auto transparent-scrollbar px-2 py-1">
                   {this.state.data.motions.map((motion, index) => (
                     <div key={index} className="mb-2 flex gap-2 ">
                       <h3
@@ -725,7 +732,7 @@ export default class Edit extends Component {
                         onChange={(event) =>
                           this.handlerChangeNextMotion(
                             event.target.value,
-                            index,
+                            index
                           )
                         }
                         value={motion.next}
