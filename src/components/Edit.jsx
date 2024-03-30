@@ -6,6 +6,7 @@ import {
   FaSave,
   FaPlus,
   FaMinus,
+  FaCode,
   FaArrowAltCircleRight,
   FaArrowAltCircleLeft,
 } from "react-icons/fa";
@@ -15,13 +16,12 @@ import {
   MdDelete,
   MdEdit,
   MdLogout,
-  MdChecklist,
 } from "react-icons/md";
 import { FaCirclePlay, FaCircleStop } from "react-icons/fa6";
 import { FaPowerOff } from "react-icons/fa";
 import motionUnit from "../assets/motionunit.png";
 import motionStep from "../assets/motionstep.png";
-import motionGroup from "../assets/motiongroup.png";
+import servosIdGroup from "../assets/servosidgroup.png";
 import poseofStep from "../assets/poseofstep.png";
 import poseofRobot from "../assets/poseofrobot.png";
 import Serial from "../Serial";
@@ -676,7 +676,7 @@ export default class Edit extends Component {
                 className="btn btn-sm h-10 w-10 rounded-xl border-none bg-yellow-500 text-lg text-white hover:bg-yellow-600"
                 onClick={this.generate}
               >
-                <MdLogout />
+                <FaCode />
               </button>
             </div>
             <div className="flex h-full w-[19vw] items-center justify-center px-8 py-2">
@@ -793,7 +793,7 @@ export default class Edit extends Component {
                 <div className="flex h-[39vh] w-full flex-col gap-2 rounded-3xl bg-sky-200/40 px-3 py-5 backdrop-blur-sm">
                   <div className="flex justify-center font-bold">
                     <img
-                      src={motionGroup}
+                      src={servosIdGroup}
                       alt="Motion Group"
                       className="mb-2 h-7"
                     />
@@ -949,25 +949,25 @@ export default class Edit extends Component {
         </div>
 
         <dialog id="modal_new_motion" className="modal">
-          <div className="modal-box">
-            <h3 className="mb-6 flex justify-center text-lg font-bold ">
+          <div className="modal-box w-1/3 max-w-5xl bg-slate-50 ">
+            <h3 className="mb-6 flex justify-center text-lg font-bold text-slate-900">
               Create New Motion
             </h3>
             <div className="flex">
               <input
                 type="text"
                 id="input_new_motion"
-                className="input input-bordered w-full text-center"
+                className="input input-bordered w-full text-center  bg-slate-50 text-base"
                 placeholder=" Input Motion Name"
               />
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+                <button className="btn mx-3 border-none bg-red-300 text-red-600  hover:bg-red-400 hover:text-red-600">
                   Close
                 </button>
                 <button
-                  className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                  className="btn me-2 bg-amber-500 border-none text-white hover:bg-amber-600 hover:border-none"
                   onClick={this.saveNewMotion}
                 >
                   Save
@@ -978,15 +978,15 @@ export default class Edit extends Component {
         </dialog>
 
         <dialog id="modal_edit_motion" className="modal">
-          <div className="modal-box">
-            <h3 className="mb-6 flex justify-center text-lg font-bold ">
+          <div className="modal-box w-1/3 max-w-5xl bg-slate-50 ">
+            <h3 className="mb-6 flex justify-center text-lg font-bold text-slate-900">
               Change Motion Name
             </h3>
             <div className="flex">
               <input
                 type="text"
                 id="input_edit_motion"
-                className="input input-bordered w-full text-center"
+                className="input input-bordered w-full text-center  bg-slate-50 text-base"
                 placeholder=" Input Motion Name"
                 defaultValue={
                   this.state.activeMotion != null
@@ -997,11 +997,11 @@ export default class Edit extends Component {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+                <button className="btn mx-3 border-none bg-red-300 text-red-600  hover:bg-red-400 hover:text-red-600">
                   Close
                 </button>
                 <button
-                  className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                  className="btn me-2 bg-amber-500 border-none text-white hover:bg-amber-600 hover:border-none"
                   onClick={this.saveEditMotion}
                 >
                   Save
@@ -1011,15 +1011,15 @@ export default class Edit extends Component {
           </div>
         </dialog>
         <dialog id="modal_add_motion_group" className="modal">
-          <div className="modal-box">
-            <h3 className="mb-6 flex justify-center text-lg font-bold ">
+          <div className="modal-box w-1/3 max-w-5xl bg-slate-50 ">
+            <h3 className="mb-6 flex justify-center text-lg font-bold text-slate-900">
               Add Motion Group
             </h3>
             <div className="flex flex-col">
               <input
                 type="text"
                 id="input_name_motion_group"
-                className="input input-bordered w-full text-center"
+                className="input input-bordered w-full text-center  bg-slate-50 text-base"
                 placeholder=" Input Motion Group Name"
               />
 
@@ -1041,11 +1041,11 @@ export default class Edit extends Component {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+                <button className="btn mx-3 border-none bg-red-300 text-red-600  hover:bg-red-400 hover:text-red-600">
                   Close
                 </button>
                 <button
-                  className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                  className="btn me-2 bg-amber-500 border-none text-white hover:bg-amber-600 hover:border-none"
                   onClick={this.saveIdGroup}
                 >
                   Save
@@ -1055,14 +1055,14 @@ export default class Edit extends Component {
           </div>
         </dialog>
         <dialog id="modal_import_motion" className="modal">
-          <div className="modal-box w-11/12 max-w-5xl">
-            <h3 className="mb-6 flex justify-center text-lg font-bold ">
+          <div className="modal-box w-1/3 max-w-5xl bg-slate-50 ">
+            <h3 className="mb-6 flex justify-center text-lg font-bold text-slate-900">
               Import Motion
             </h3>
             <div className="flex flex-col">
               <textarea
                 id="textarea_import_motion"
-                className="textarea textarea-bordered"
+                className="textarea textarea-bordered bg-slate-50 w-full text-center text-base"
                 placeholder="Paste here"
                 onChange={this.handlerImportMotion}
               ></textarea>
@@ -1070,11 +1070,11 @@ export default class Edit extends Component {
             </div>
             <div className="modal-action">
               <form method="dialog">
-                <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+                <button className="btn mx-3 border-none  bg-red-300 text-red-600  hover:bg-red-400 hover:text-red-600">
                   Close
                 </button>
                 <button
-                  className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                  className="btn me-2 bg-amber-500 border-none text-white hover:bg-amber-600 hover:border-none"
                   onClick={this.buttonImportMotion}
                 >
                   Import

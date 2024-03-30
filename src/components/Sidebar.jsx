@@ -61,9 +61,9 @@ export default function Sidebar({
 
   return (
     <>
-      <section className="h-screen  bg-sky-900 px-7">
-        <div className="mb-4 flex h-[10vh] items-center justify-center">
-          <img src={appLogo} alt="Azzahraly" className="flex h-8 w-fit" />
+      <section className="h-screen bg-sky-900 px-7">
+        <div className="my-2 flex h-[10vh] items-center justify-center">
+          <img src={appLogo} alt="Azzahraly" className="flex h-10 w-fit" />
         </div>
         <div className="flex flex-col gap-5">
           {/* active Button */}
@@ -111,15 +111,15 @@ export default function Sidebar({
         </div>
       </section>
       <dialog id="modal_import_project" className="modal">
-        <div className="modal-box">
-          <h3 className="mb-6 flex justify-center text-lg font-bold ">
+        <div className="modal-box w-1/3 max-w-5xl bg-slate-50 ">
+          <h3 className="mb-6 flex justify-center text-lg font-bold text-slate-900">
             Import Project
           </h3>
           <div className="flex flex-col">
             <input
               type="file"
               id="input_import_project"
-              className="file-input file-input-bordered w-full"
+              className="file-input file-input-bordered w-full text-center  bg-slate-50 text-base"
               placeholder="File"
               onChange={handlerImportProject}
             />
@@ -127,11 +127,11 @@ export default function Sidebar({
           </div>
           <div className="modal-action">
             <form method="dialog">
-              <button className="btn mx-3 border-2 border-red-500  bg-white text-red-500 hover:border-red-600 hover:bg-white hover:text-red-600">
+              <button className="btn mx-3 border-none bg-red-300 text-red-600  hover:bg-red-400 hover:text-red-600">
                 Close
               </button>
               <button
-                className="btn me-2 bg-amber-500 text-white hover:bg-amber-600"
+                className="btn me-2 bg-amber-500 border-none text-white hover:bg-amber-600 hover:border-none"
                 onClick={handlerImportButton}
               >
                 Import
