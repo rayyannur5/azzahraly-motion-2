@@ -1,5 +1,7 @@
 import aboutApps from "../assets/aboutapps.png";
 import azzahralyLogo from "../assets/KRSTI.png";
+import unesaLogo from "../assets/unesa.png";
+import dewoLogo from "../assets/dewo.png";
 export default function About() {
   return (
     <>
@@ -9,18 +11,32 @@ export default function About() {
             <header className="flex justify-center items-center my-2">
               <img src={aboutApps} alt="About Apps" className="h-12 " />
             </header>
-            <div className="h-[57vh] flex flex-col justify-start gap-10 text-white">
-              <p className="text-lg font-normal text-center ">
-                <b>Azzahraly Motion Apps</b> adalah perangkat lunak untuk
-                membuat gerakan pada robot tari humanoid. Aplikasi ini memiliki{" "}
-                <b>12 Fitur</b> utama yaitu{" "}
-                <b>
-                  Dashboard, New Project, Import Project, New Motion, Add
-                  Motion, Delete Motion, Save Project, Play Motion, Stop Motion,
-                  Connect Robot{" "}
-                </b>{" "}
-                dan <b> Download Project.</b>
-              </p>
+            <div className="h-[57vh] flex flex-col justify-start gap-8 text-white">
+              <div className="flex flex-row gap-x-10">
+                <img src={unesaLogo} alt="Unesa" className="h-28 col-start-1" />
+                <p className="text-lg font-normal text-justify">
+                  <b>Azzahraly Motion Apps</b> adalah perangkat lunak untuk
+                  membuat gerakan pada robot tari humanoid. Aplikasi ini
+                  memiliki <b>12 Fitur</b> utama yaitu{" "}
+                  <b>
+                    Dashboard, New Project, Import Project, New Motion, Add
+                    Motion, Delete Motion, Save Project, Play Motion, Stop
+                    Motion, Connect Robot{" "}
+                  </b>{" "}
+                  dan <b> Download Project.</b>
+                </p>
+              </div>
+              <div className="flex flex-row gap-x-10">
+                <p className="text-lg font-normal text-justify ">
+                  Aplikasi ini adalah karya mahasiswa <b>DEWO ROBOTIK</b>{" "}
+                  Fakultas Teknik <b>Universitas Negeri Surabaya. </b> Aplikasi
+                  ini dibuat untuk membantu Tim Azzahraly membuat gerakan tari
+                  pada robot tari humanoid. Apikasi ini dibuat terinspirasi dari
+                  aplikasi RoboPlus 1.0 milik Robotis. Dan aplikasi ini adalah
+                  generasi kedua dari aplikasi sebelumnya.
+                </p>
+                <img src={dewoLogo} alt="Unesa" className="h-28 col-start-1" />
+              </div>
               <div className="flex flex-row gap-2">
                 <img
                   src={azzahralyLogo}
