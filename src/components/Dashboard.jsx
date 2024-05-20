@@ -1,4 +1,10 @@
-import { listAll, ref, getDownloadURL, deleteObject } from "firebase/storage";
+import {
+  listAll,
+  ref,
+  getDownloadURL,
+  deleteObject,
+  getMetadata,
+} from "firebase/storage";
 import { storage } from "../firebase";
 import { useEffect, useState } from "react";
 import { MdDelete } from "react-icons/md";
@@ -6,6 +12,7 @@ import { HiDocumentDownload } from "react-icons/hi";
 import azzahralyLogo from "../assets/KRSTI.png";
 import recentTitle from "../assets/recent.png";
 import { ToastContainer, toast } from "react-toastify";
+import moment from "moment/moment";
 
 export default function Dashboard({ handlerOpenRecentProject }) {
   const [list, setList] = useState(Array());
@@ -13,7 +20,25 @@ export default function Dashboard({ handlerOpenRecentProject }) {
   useEffect(() => {
     const refProject = ref(storage, "/");
     listAll(refProject).then((res) => {
-      setList(res.items);
+      const promises = [];
+      for (const result of res.items) {
+        promises.push(getMetadata(result));
+      }
+
+      Promise.all(promises).then((metadatas) => {
+        const updatedFiles = metadatas.map((metadata, index) => {
+          const file = res.items[index];
+          return {
+            ref: file,
+            name: file.name,
+            lastModified: moment(metadata.updated)
+              .locale("id")
+              .format("D MMMM YYYY, HH:mm:ss"),
+          };
+        });
+        setList(updatedFiles);
+      });
+      // setList(res.items);
     });
   }, []);
 
@@ -78,13 +103,13 @@ export default function Dashboard({ handlerOpenRecentProject }) {
                       </td>
                       <td className="flex w-1/3 items-center justify-start py-2">
                         <button
-                          onClick={() => handlerOpenRecentProject(project)}
+                          onClick={() => handlerOpenRecentProject(project.ref)}
                         >
                           {project.name}
                         </button>
                       </td>
                       <td className="flex w-1/3 items-center justify-start py-2">
-                        23.00; 12/02/2023
+                        {project.lastModified}
                       </td>
                       <td className="flex w-1/4 flex-row items-center justify-start gap-3 py-2 text-2xl ">
                         <button
