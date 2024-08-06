@@ -31,11 +31,14 @@ export default function Dashboard({ handlerOpenRecentProject }) {
           return {
             ref: file,
             name: file.name,
+            updated: metadata.updated,
             lastModified: moment(metadata.updated)
               .locale("id")
               .format("D MMMM YYYY, HH:mm:ss"),
           };
         });
+
+        updatedFiles.sort((a, b) => new Date(b.updated) - new Date(a.updated));
         setList(updatedFiles);
       });
       // setList(res.items);
@@ -43,7 +46,7 @@ export default function Dashboard({ handlerOpenRecentProject }) {
   }, []);
 
   function deleteFile(index) {
-    const _ref = ref(storage, list[index]);
+    const _ref = ref(storage, list[index].ref);
 
     // Delete the file
     deleteObject(_ref)
@@ -56,7 +59,7 @@ export default function Dashboard({ handlerOpenRecentProject }) {
   }
 
   function downloadFile(index) {
-    getDownloadURL(ref(storage, list[index]))
+    getDownloadURL(ref(storage, list[index].ref))
       .then((url) => {
         // `url` is the download URL for 'images/stars.jpg'
         console.log(url);
